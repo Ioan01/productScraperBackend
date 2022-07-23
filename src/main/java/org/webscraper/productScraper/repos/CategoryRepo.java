@@ -1,4 +1,9 @@
-package org.webscraper.groceryscraper.repos;
+package org.webscraper.productScraper.repos;
 
-public interface CategoryRepo {
+import org.springframework.data.repository.Repository;
+import org.webscraper.productScraper.entities.Category;
+
+public interface CategoryRepo extends Repository<Category, Long> {
+
+    Category save(Category category);
 }

@@ -1,13 +1,14 @@
-package org.webscraper.groceryscraper.entities;
+package org.webscraper.productScraper.entities;
 
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.net.URI;
 
 @Entity
 @Getter
-public class Store {
+public class Store implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "storeId", nullable = false)

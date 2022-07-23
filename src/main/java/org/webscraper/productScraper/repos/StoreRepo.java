@@ -1,4 +1,8 @@
-package org.webscraper.groceryscraper.repos;
+package org.webscraper.productScraper.repos;
 
-public interface StoreRepo {
+import org.springframework.data.repository.Repository;
+import org.webscraper.productScraper.entities.Store;
+
+public interface StoreRepo extends Repository<Store, Long> {
+    Store save(Store store);
 }

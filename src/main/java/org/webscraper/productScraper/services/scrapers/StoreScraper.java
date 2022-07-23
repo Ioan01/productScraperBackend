@@ -1,20 +1,28 @@
-package org.webscraper.productScraper.services;
+package org.webscraper.productScraper.services.scrapers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.annotation.PostConstruct;
 
-public interface StoreScraper {
+@Slf4j
+public abstract class StoreScraper {
 
 
-    public void fetchCurrencies();
+    public abstract void fetchStoreData();
 
     @PostConstruct
-    public void onStartup();
+    public void onStartup()
+    {
+        fetchStoreData();
+    }
 
     @Async
     @Scheduled(cron = "@daily")
-    public void onSchedule();
+    public void onSchedule()
+    {
+        fetchStoreData();
+    }
 
 }

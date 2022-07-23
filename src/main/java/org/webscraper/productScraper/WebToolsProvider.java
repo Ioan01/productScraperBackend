@@ -1,7 +1,6 @@
-package org.webscraper.groceryscraper;
+package org.webscraper.productScraper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.GsonBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 

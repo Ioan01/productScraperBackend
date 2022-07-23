@@ -1,4 +1,4 @@
-package org.webscraper.groceryscraper;
+package org.webscraper.productScraper;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;

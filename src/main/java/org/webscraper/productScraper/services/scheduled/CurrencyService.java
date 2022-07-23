@@ -1,8 +1,6 @@
-package org.webscraper.groceryscraper.services.scheduled;
+package org.webscraper.productScraper.services.scheduled;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;

@@ -7,16 +7,14 @@ import java.io.Serializable;
 
 @Entity
 @Getter
-public class Category implements Serializable {
+public class Manufacturer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "categoryId", nullable = false)
+    @Column(name = "manufacturerId", nullable = false)
     private Long id;
 
 
     @Column(unique = true)
-    private String categoryName;
-
-
+    private String manufacturerName;
 
 }

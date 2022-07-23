@@ -1,12 +1,10 @@
-package org.webscraper.groceryscraper.repos;
+package org.webscraper.productScraper.repos;
 
 import org.springframework.data.repository.Repository;
-import org.webscraper.groceryscraper.entities.Product;
+import org.webscraper.productScraper.entities.Product;
 
-import java.util.Optional;
+public interface ProductRepo extends Repository<Product, Long> {
 
-public interface ProductRepo extends Repository<Long, Product> {
-
-
+    Product save(Product product);
 
 }

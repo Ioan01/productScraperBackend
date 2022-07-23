@@ -1,19 +1,22 @@
-package org.webscraper.groceryscraper.entities;
+package org.webscraper.productScraper.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
-public class Product {
+public class Product implements Serializable {
 
     @JsonIgnore
     @Id
@@ -36,4 +39,7 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "storeId")
     private Store store;
+
+
+    private ArrayList<Category> categoryList;
 }
