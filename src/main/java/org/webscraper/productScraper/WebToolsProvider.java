@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
 
 @Component
 public class WebToolsProvider {
@@ -20,4 +21,5 @@ public class WebToolsProvider {
     {
         return HttpClient.newHttpClient();
     }
+
 }

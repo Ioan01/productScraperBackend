@@ -16,6 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@With
 public class Product implements Serializable {
 
     @JsonIgnore
@@ -40,6 +41,7 @@ public class Product implements Serializable {
     @JoinColumn(name = "storeId")
     private Store store;
 
-
-    private ArrayList<Category> categoryList;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 }

@@ -1,4 +1,4 @@
-package org.webscraper.productScraper.services.scheduled;
+package org.webscraper.productScraper.services.currency;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;

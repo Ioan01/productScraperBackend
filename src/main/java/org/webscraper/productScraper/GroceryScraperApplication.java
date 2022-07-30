@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class GroceryScraperApplication {
 
     public static void main(String[] args) {
-
+        System.setProperty("jdk.httpclient.allowRestrictedHeaders", "Host");
         SpringApplication.run(GroceryScraperApplication.class, args);
     }
 
