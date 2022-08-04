@@ -8,6 +8,6 @@ import java.util.Optional;
 public interface ManufacturerRepo extends Repository<Manufacturer, Long> {
     Manufacturer save(Manufacturer manufacturer);
 
-    Optional<Manufacturer> findManufacturerByManufacturerName(String manufacturerName);
+    Optional<Manufacturer> findByManufacturerName(String manufacturerName);
 }
 

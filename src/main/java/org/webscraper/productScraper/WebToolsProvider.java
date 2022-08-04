@@ -5,20 +5,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
 
 @Component
 public class WebToolsProvider {
 
     @Bean
-    public ObjectMapper getGsonBuilder()
-    {
+    public ObjectMapper getGsonBuilder() {
         return new ObjectMapper();
     }
 
     @Bean
-    public HttpClient getHttpClient()
-    {
+    public HttpClient getHttpClient() {
         return HttpClient.newHttpClient();
     }
 

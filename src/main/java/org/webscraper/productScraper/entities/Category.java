@@ -1,6 +1,9 @@
 package org.webscraper.productScraper.entities;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,14 +14,13 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class Category implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "categoryId", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "category_id", nullable = false)
     private Long id;
 
     @NonNull
     @Column(unique = true)
     private String categoryName;
-
 
 
 }

@@ -5,31 +5,28 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.sql.Date;
 
 @Entity
 @NoArgsConstructor
 @Getter
-public class CurrencyEntry {
+public class CurrencyEntry implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Temporal(TemporalType.DATE)
     private Date date;
+    private BigDecimal eur;
+    private BigDecimal usd;
 
-    private BigDecimal conversionRate;
-
-    public void setId(Long id) {
-        this.id = id;
+    public CurrencyEntry(BigDecimal eur, BigDecimal usd) {
+        this.eur = eur;
+        this.usd = usd;
+        this.date = new Date(System.currentTimeMillis());
     }
 
-    public CurrencyEntry(String date, BigDecimal conversionRate) throws ParseException {
-        this.date = new SimpleDateFormat("yyyy-MM-dd").parse(date);
-        this.conversionRate = conversionRate;
-    }
+
 }

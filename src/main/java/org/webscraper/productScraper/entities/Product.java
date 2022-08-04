@@ -8,8 +8,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,31 +15,36 @@ import java.util.List;
 @Setter
 @Entity
 @With
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"product_name", "store_id"})
+})
 public class Product implements Serializable {
 
     @JsonIgnore
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "productId", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_id", nullable = false)
     private Long id;
-
     @ManyToOne
-    @JoinColumn(name = "manufacturerId")
+    @JoinColumn(name = "manufacturer_id")
     private Manufacturer manufacturer;
-
+    @Column(name = "product_name")
     private String productName;
-
     private URI imageUri;
-
     private BigDecimal pricePerUnit;
-
     private String unit;
-
     @ManyToOne
-    @JoinColumn(name = "storeId")
+    @JoinColumn(name = "store_id")
     private Store store;
-
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+
+    public Product(String productName, URI imageUri, BigDecimal pricePerUnit, String unit) {
+        this.productName = productName;
+        this.imageUri = imageUri;
+        this.pricePerUnit = pricePerUnit;
+        this.unit = unit;
+    }
 }
