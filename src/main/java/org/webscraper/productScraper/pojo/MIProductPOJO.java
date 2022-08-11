@@ -52,9 +52,9 @@ public class MIProductPOJO {
         return unit;
     }
 
-    private Double getPrice() {
+    private Number getPrice() {
 
-        Double price = (Double) this.price.get("value");
+        Number price = (Number) this.price.get("value");
 
         String supplementaryPriceLabel2 = (String) this.price.get("supplementaryPriceLabel2");
         if (supplementaryPriceLabel2 == null)
@@ -65,13 +65,15 @@ public class MIProductPOJO {
             return price;
         price = Double.valueOf(matcher.group());
 
+
+
         return price;
     }
 
     public Product toProduct() {
 
         String unit = getUnit();
-        Double price = getPrice();
+        Double price = getPrice().doubleValue();
 
         String thumbnail = ((Map<String, String>) images.get(0)).get("url");
 

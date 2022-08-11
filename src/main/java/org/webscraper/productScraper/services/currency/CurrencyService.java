@@ -32,6 +32,7 @@ public class CurrencyService {
         this.currencyRepository = currencyRepository;
         this.httpClient = httpClient;
         this.objectMapper = objectMapper;
+
     }
 
     @PostConstruct

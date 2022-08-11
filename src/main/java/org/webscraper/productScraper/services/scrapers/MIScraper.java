@@ -3,6 +3,7 @@ package org.webscraper.productScraper.services.scrapers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.webscraper.productScraper.dto.MIProductsDTO;
 import org.webscraper.productScraper.entities.Manufacturer;
@@ -24,6 +25,7 @@ import java.util.Map;
 
 @Slf4j
 @Service
+@EnableAsync
 public class MIScraper extends StoreScraper {
 
     private static final String webSite = "https://www.mega-image.ro/";
@@ -32,7 +34,7 @@ public class MIScraper extends StoreScraper {
 
     private final String baseUrl = "https://api.mega-image.ro/" +
             "?operationName=GetCategoryProductSearch&variables=" + URLEncoder.encode(
-            "{\"lang\":\"ro\",\"searchQuery\":\"\",\"category\":\"CATEGORY\",\"pageNumber\":0,\"pageSize\":10,\"filterFlag\":true}") +
+            "{\"lang\":\"ro\",\"searchQuery\":\"\",\"category\":\"CATEGORY\",\"pageNumber\":0,\"pageSize\":2000,\"filterFlag\":true}") +
             "&extensions=+" +
             URLEncoder.encode("{\"persistedQuery\":{\"version\":1,\"sha256Hash\":\"d2240b8505967fc091dacc9aa24ff71e86740067b9b36630ea857b0b29172c81\"}}");
 
@@ -55,6 +57,13 @@ public class MIScraper extends StoreScraper {
             requestMap.put(category, request);
             index++;
         }
+
+
+        // sucuri si apa
+        requestMap.replace(categoryByCode[categoryByCode.length - 1]
+                , HttpRequest.newBuilder(URI.create(baseUrl.replace("CATEGORY", "008002001"))).build());
+
+
 
         return requestMap;
     }

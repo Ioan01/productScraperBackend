@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.webscraper.productScraper.entities.Category;
 import org.webscraper.productScraper.entities.Product;
@@ -21,6 +22,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
+@EnableAsync
 public abstract class StoreScraper {
 
     protected final String[] categoryByCode = {
@@ -31,11 +33,11 @@ public abstract class StoreScraper {
             "Paine/MicDejun",
             "Dulciuri/Snacks",
             "Condimente",
-//            "Bautura/Tutun"
+            "Apa/sucuri"
     };
-
     protected final StoreRepo storeRepo;
     protected final CategoryRepo categoryRepo;
+    private final String storeName;
     protected Store storeReference;
     protected Map<String, HttpRequest> httpRequests;
     protected ManufacturerRepo manufacturerRepo;
@@ -45,6 +47,8 @@ public abstract class StoreScraper {
     protected HttpClient httpClient;
 
     public StoreScraper(Store store, StoreRepo storeRepo, CategoryRepo categoryRepo, ManufacturerRepo manufacturerRepo, ProductRepo productRepo, HttpClient httpClient, ObjectMapper objectMapper, ProductPriceRepo priceRepo) {
+
+        this.storeName = store.getStoreName();
 
         this.categoryRepo = categoryRepo;
         this.manufacturerRepo = manufacturerRepo;
@@ -71,64 +75,68 @@ public abstract class StoreScraper {
     protected abstract ArrayList<Product> interpretBody(String requestBody, String category) throws JsonProcessingException;
 
 
-    protected void fetchStoreData() {
+    @Async
+    public void fetchStoreData() {
 
-        log.info("Starting Mega Image import");
+        log.info("Starting import from " + storeName);
 
 
         // http endpoints are generated during startup to know where data for each category can be found
         httpRequests.forEach(((category, uri) -> {
-            log.info("Pulling " + category + " from " + uri);
+            new Thread(() -> {
 
-            // find category, otherwise save it
-            var _category = categoryRepo.findByCategoryName(category)
-                    .orElseGet(() -> categoryRepo.save(new Category(category)));
+                // find category, otherwise save it
+                var _category = categoryRepo.findByCategoryName(category)
+                        .orElseGet(() -> categoryRepo.save(new Category(category)));
 
-            String requestBody = null;
-            try {
-                // fetch data
-                requestBody = getCategoryBody(uri);
-                // interpret data into products
-                var products = interpretBody(requestBody, category);
+                String requestBody = null;
+                try {
+                    // fetch data
+                    requestBody = getCategoryBody(uri);
+                    // interpret data into products
+                    var products = interpretBody(requestBody, category);
 
-                // save each product and their price today
-                products.forEach((product -> {
+                    // save each product and their price today
+                    products.forEach((product -> {
 
-                    // try to find the product, otherwise we will save it
+                        // try to find the product, otherwise we will save it
 
-                    AtomicBoolean found = new AtomicBoolean(true);
+                        AtomicBoolean found = new AtomicBoolean(true);
 
-                    Product _product = productRepo.getProductByProductNameAndStore(product.getProductName(), storeReference)
-                            .orElseGet(() -> {
-                                found.set(false);
-                                return productRepo.save(product
-                                        .withCategory(_category)
-                                        .withStore(storeReference));
-                            });
+                        Product _product = productRepo.getProductByProductNameAndStore(product.getProductName(), storeReference)
+                                .orElseGet(() -> {
+                                    found.set(false);
+                                    return productRepo.save(product
+                                            .withCategory(_category)
+                                            .withStore(storeReference));
+                                });
 
-                    // update product
-                    if (found.get()) {
-                        productRepo.save(_product);
-                        log.info("Updated product " + _product.getProductName());
-                    }
+                        // update product
+                        if (found.get()) {
+                            productRepo.save(_product);
+                        }
 
-                    // if product price node exists for product at this date do nothing
-                    // otherwise, save
-                    priceRepo.getByProductAndDate(_product, new Date(System.currentTimeMillis()))
-                            .orElseGet(() -> priceRepo.save(new ProductPriceNode(_product)));
-                }));
+                        // if product price node exists for product at this date do nothing
+                        // otherwise, save
+                        priceRepo.getByProductAndDate(_product, new Date(System.currentTimeMillis()))
+                                .orElseGet(() -> priceRepo.save(new ProductPriceNode(_product)));
+                    }));
 
-            } catch (Exception e) {
-                log.error("Error fetching category " + category, e);
-            }
+                } catch (Exception e) {
+                    log.error("Error fetching category " + category, e);
+                }
+            }).start();
         }));
+
+        log.info("Updated prices from " + storeName);
     }
 
     @Async
     @PostConstruct
     public void onStartup() {
         httpRequests = generateRequests();
-        fetchStoreData();
+
+        new Thread(this::fetchStoreData).start();
     }
 
     @Async
