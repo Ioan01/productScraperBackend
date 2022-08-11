@@ -10,14 +10,15 @@ import java.net.http.HttpClient;
 public class WebToolsProvider {
 
     @Bean
-    public ObjectMapper getGsonBuilder()
-    {
+    public ObjectMapper getGsonBuilder() {
         return new ObjectMapper();
     }
 
     @Bean
-    public HttpClient getHttpClient()
-    {
+    public HttpClient getHttpClient() {
         return HttpClient.newHttpClient();
     }
+
+
+
 }
