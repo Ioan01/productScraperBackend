@@ -2,6 +2,7 @@ package org.webscraper.productScraper.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,7 +19,7 @@ import java.net.URI;
 @Table(uniqueConstraints = {
         @UniqueConstraint(columnNames = {"product_name", "store_id"})
 })
-public class Product implements Serializable {
+public class Product implements IVisualEntity{
 
     @JsonIgnore
     @Id
@@ -30,7 +31,8 @@ public class Product implements Serializable {
     private Manufacturer manufacturer;
     @Column(name = "product_name")
     private String productName;
-    private URI imageUri;
+
+
     private BigDecimal pricePerUnit;
     private String unit;
     @ManyToOne
@@ -40,6 +42,15 @@ public class Product implements Serializable {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @JsonIgnore
+    @Transient
+    private URI imageUri;
+
+    @JsonIgnoreProperties({"image"})
+    @ManyToOne
+    @JoinColumn(name = "image_id")
+    Image image;
+
 
     public Product(String productName, URI imageUri, BigDecimal pricePerUnit, String unit) {
         this.productName = productName;
@@ -47,4 +58,5 @@ public class Product implements Serializable {
         this.pricePerUnit = pricePerUnit;
         this.unit = unit;
     }
+
 }

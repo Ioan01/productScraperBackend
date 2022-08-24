@@ -2,19 +2,22 @@ package org.webscraper.productScraper.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.webscraper.productScraper.entities.Product;
 import org.webscraper.productScraper.services.EntityService.ProductService;
-import org.webscraper.productScraper.services.scrapers.AsyncTest;
-import org.webscraper.productScraper.services.scrapers.MIScraper;
+
+import java.util.ArrayList;
 
 
 @RestController
 public class ProductController {
 
 
-    @Autowired
-    AsyncTest test;
     ProductService productService;
 
     public ProductController(ProductService productService) {
@@ -22,12 +25,14 @@ public class ProductController {
     }
 
 
-    @GetMapping("test")
-    public String test()
-    {
-        test.test();
+    @GetMapping("/a")
 
-        return "a";
+    public Page<Product> getProductsByName(@RequestParam String name,@RequestParam String orderBy,@RequestParam Sort.Direction direction, @RequestParam Integer page,@RequestParam Integer pageSize)
+    {
+        return productService.getByName(name,PageRequest.of(page,pageSize, direction,orderBy));
     }
+
+
+
 
 }
