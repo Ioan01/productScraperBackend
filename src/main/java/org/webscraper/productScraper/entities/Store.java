@@ -1,9 +1,7 @@
 package org.webscraper.productScraper.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.With;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,7 +12,7 @@ import java.net.URI;
 @NoArgsConstructor
 @AllArgsConstructor
 @With
-public class Store implements Serializable {
+public class Store implements IVisualEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "store_id", nullable = false)
@@ -26,6 +24,17 @@ public class Store implements Serializable {
 
     private URI webSite;
 
-    private URI icon;
+    @JsonIgnore
+    @Transient
+    private URI imageUri;
+
+
+    @JsonIgnore
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "image_id")
+    private Image image;
+
+
 
 }
